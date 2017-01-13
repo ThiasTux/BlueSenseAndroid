@@ -1,7 +1,7 @@
 package uk.ac.sussex.android.bluesensehub.uicontroller.activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import uk.ac.sussex.android.bluesensehub.R;
 
