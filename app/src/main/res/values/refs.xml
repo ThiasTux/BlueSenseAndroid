@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="devices_layout" type="layout">@layout/devices_layout_list</item>
+</resources>
