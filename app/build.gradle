@@ -37,6 +37,8 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     //BluetoothSPP
     compile 'com.akexorcist:bluetoothspp:1.0.0'
+    //FAB
+    compile 'com.github.clans:fab:1.6.4'
 
 
     testCompile 'junit:junit:4.12'

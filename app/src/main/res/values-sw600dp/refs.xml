@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="devices_layout" type="layout">@layout/devices_layout_grid</item>
+    <item id="isTablet" name="isTablet" type="bool">true</item>
 </resources>
