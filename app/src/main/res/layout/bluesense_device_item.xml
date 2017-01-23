@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:text="Status"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:id="@+id/status"
+                android:id="@+id/device_status"
                 android:layout_below="@+id/status_label"
                 android:layout_alignParentEnd="true" />
 

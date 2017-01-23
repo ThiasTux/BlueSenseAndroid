@@ -39,6 +39,10 @@ dependencies {
     compile 'com.akexorcist:bluetoothspp:1.0.0'
     //FAB
     compile 'com.github.clans:fab:1.6.4'
+    //Event bus
+    compile 'org.greenrobot:eventbus:3.0.0'
+    //Lombok plugin
+    provided "org.projectlombok:lombok:1.12.6"
 
 
     testCompile 'junit:junit:4.12'
