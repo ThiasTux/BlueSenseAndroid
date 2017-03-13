@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
 import uk.ac.sussex.android.bluesensehub.R;
 
 /**
- * Created by mathias on 16/01/17.
+ * Created by ThiasTux.
  */
 public class ScanBlueSenseDevicesAdapter extends RecyclerView.Adapter<ScanBlueSenseDevicesAdapter.ViewHolder> {
 
@@ -61,7 +61,7 @@ public class ScanBlueSenseDevicesAdapter extends RecyclerView.Adapter<ScanBlueSe
         return bluetoothDevices.get(position);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @BindView(R.id.device_name)
         TextView deviceNameTextView;
@@ -69,7 +69,7 @@ public class ScanBlueSenseDevicesAdapter extends RecyclerView.Adapter<ScanBlueSe
         TextView deviceAddressTextView;
 
 
-        public ViewHolder(View v) {
+        ViewHolder(View v) {
             super(v);
             ButterKnife.bind(this, v);
             v.setOnClickListener(this);

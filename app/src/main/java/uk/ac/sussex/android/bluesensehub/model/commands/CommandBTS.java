@@ -3,7 +3,7 @@ package uk.ac.sussex.android.bluesensehub.model.commands;
 import uk.ac.sussex.android.bluesensehub.model.CommandBase;
 
 /**
- * Created by mathias on 23/01/17.
+ * Created by ThiasTux.
  */
 public class CommandBTS extends CommandBase {
 

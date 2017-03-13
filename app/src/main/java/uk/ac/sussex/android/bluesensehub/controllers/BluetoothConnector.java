@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by mathias on 17/01/17.
+ * Created by ThiasTux.
  */
 public class BluetoothConnector {
 

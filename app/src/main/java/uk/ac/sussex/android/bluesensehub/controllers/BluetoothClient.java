@@ -18,7 +18,7 @@ import uk.ac.sussex.android.bluesensehub.controllers.buses.ClientDisconnSuccess;
 import uk.ac.sussex.android.bluesensehub.utilities.Const;
 
 /**
- * Created by mathias on 17/01/17.
+ * Created by ThiasTux.
  */
 
 public class BluetoothClient implements Runnable {

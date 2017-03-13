@@ -1,7 +1,7 @@
 package uk.ac.sussex.android.bluesensehub.uicontroller.views;
 
 /**
- * Created by mathias on 13/01/17.
+ * Created by ThiasTux.
  */
 
 public class DeviceView  {

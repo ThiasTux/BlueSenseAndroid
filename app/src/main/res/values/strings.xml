@@ -6,4 +6,24 @@
     <string name="connecting">Connecting...</string>
     <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
+    <string name="new_streaming_session">New Streaming Session</string>
+    <string name="select_devices_label">Select devices</string>
+    <string name="confirm">ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="select_all">Select all</string>
+    <string name="deselect_all">Deselect all</string>
+    <string name="parameters">Parameters</string>
+    <string name="status">Status</string>
+    <string name="network">Network</string>
+    <string name="port">Port</string>
+    <string name="default_port_number">9432</string>
+    <string name="log_file">Log file</string>
+    <string name="file_name">File name</string>
+    <string name="default_file_name">defaul_name</string>
+    <string name="devices_status">Device connected/connecting/disconnected</string>
+    <string name="delete_device_message">Are you sure to delete the device?</string>
+    <string name="delete_device_title">Delete device:</string>
+    <string name="yes">yes</string>
+    <string name="new_logging_session">New Logging Session</string>
+    <string name="actions">actions</string>
 </resources>

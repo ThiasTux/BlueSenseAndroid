@@ -1,7 +1,7 @@
 package uk.ac.sussex.android.bluesensehub.model;
 
 /**
- * Created by mathias on 18/01/17.
+ * Created by ThiasTux.
  */
 
 public class BluetoothState {

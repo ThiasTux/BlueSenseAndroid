@@ -18,7 +18,7 @@ import uk.ac.sussex.android.bluesensehub.model.BlueSenseDevice;
 import uk.ac.sussex.android.bluesensehub.model.BluetoothState;
 
 /**
- * Created by mathias on 16/01/17.
+ * Created by ThiasTux.
  */
 public class BlueSenseDevicesAdapter extends RecyclerView.Adapter<BlueSenseDevicesAdapter.ViewHolder> {
 
@@ -45,7 +45,7 @@ public class BlueSenseDevicesAdapter extends RecyclerView.Adapter<BlueSenseDevic
         BlueSenseDevice device = deviceMap.get(deviceAddresses.get(position));
         holder.deviceNameTextView.setText(device.getName());
         holder.deviceAddressTextView.setText(device.getAddress());
-        int state = device.getState();
+        int state = device.getStatus();
         switch (state) {
             case BluetoothState.STATE_CONNECTING:
                 holder.deviceStatusTextView.setText(R.string.connecting);
@@ -83,22 +83,26 @@ public class BlueSenseDevicesAdapter extends RecyclerView.Adapter<BlueSenseDevic
     }
 
     public void setStatus(int position, int state) {
-        deviceMap.get(deviceAddresses.get(position)).setState(state);
+        deviceMap.get(deviceAddresses.get(position)).setStatus(state);
     }
 
     public void setStatus(String address, int state) {
-        deviceMap.get(address).setState(state);
+        deviceMap.get(address).setStatus(state);
     }
 
     public void notifyItemChanged(String mAddress) {
         BlueSenseDevicesAdapter.this.notifyItemChanged(deviceAddresses.indexOf(mAddress));
     }
 
-    public void add(List<BlueSenseDevice> bluetoothDevices) {
+    public void addAll(List<BlueSenseDevice> bluetoothDevices) {
         for (BlueSenseDevice device : bluetoothDevices) {
             deviceAddresses.add(device.getAddress());
             deviceMap.put(device.getAddress(), device);
         }
+    }
+
+    public interface ClickListener {
+        void onItemClick(View v, int position);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -121,9 +125,7 @@ public class BlueSenseDevicesAdapter extends RecyclerView.Adapter<BlueSenseDevic
             if (clickListener != null)
                 clickListener.onItemClick(view, getPosition());
         }
+
     }
 
-    public interface ClickListener {
-        void onItemClick(View v, int position);
-    }
 }

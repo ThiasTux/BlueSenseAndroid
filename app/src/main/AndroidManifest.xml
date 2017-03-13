@@ -27,11 +27,27 @@
             android:name=".uicontroller.activities.ScanBlueSenseDevices"
             android:excludeFromRecents="true"
             android:theme="@style/DialogTheme" />
+        <activity
+            android:name=".uicontroller.activities.SelectDevicesActivity"
+            android:excludeFromRecents="true"
+            android:theme="@style/DialogTheme" />
+        <activity
+            android:name=".uicontroller.activities.StreamingSessionActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".uicontroller.activities.LoggingSessionActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".uicontroller.activities.PreferenceActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service
             android:name=".controllers.services.BluetoothService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
     </application>
 
 </manifest>

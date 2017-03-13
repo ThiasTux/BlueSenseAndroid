@@ -47,6 +47,7 @@ public class BluetoothService extends Service {
     private Notification mNotification;
     private static BluetoothServiceDelegate mDelegate;
     private int numDeviceConnected = 0;
+    private boolean isServiceStarted = false;
 
     public BluetoothService() {
         if (mClientsMap == null)
@@ -100,25 +101,28 @@ public class BluetoothService extends Service {
             Log.i(TAG, "::processCommand Processing command '" + comm + "'");
             switch (comm) {
                 case CommandBase.COMMAND_BLUETOOTH_START:
-                    mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-                    if (mClientsMap != null)
-                        for (String key : mClientsMap.keySet())
-                            mClientsMap.get(key).closeConnection();
-                    mClientsMap = new HashMap<>();
-                    mDeviceMap = new HashMap<>();
-                    Set<BluetoothDevice> bondedDevices = mBluetoothAdapter.getBondedDevices();
-                    if (bondedDevices.size() > 0)
-                        for (BluetoothDevice device : bondedDevices) {
-                            if (Utils.isDeviceSupported(device))
-                                mDeviceMap.put(device.getAddress(), new BlueSenseDevice(device));
-                        }
+                    if (!isServiceStarted) {
+                        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                        if (mClientsMap != null)
+                            for (String key : mClientsMap.keySet())
+                                mClientsMap.get(key).closeConnection();
+                        mClientsMap = new HashMap<>();
+                        mDeviceMap = new HashMap<>();
+                        Set<BluetoothDevice> bondedDevices = mBluetoothAdapter.getBondedDevices();
+                        if (bondedDevices.size() > 0)
+                            for (BluetoothDevice device : bondedDevices) {
+                                if (Utils.isDeviceSupported(device))
+                                    mDeviceMap.put(device.getAddress(), new BlueSenseDevice(device));
+                            }
+                        EventBus.getDefault().register(this);
+                        isServiceStarted = true;
+                    }
                     if (mDelegate != null) {
                         List<BlueSenseDevice> devices = new ArrayList<>();
                         for (String key : mDeviceMap.keySet())
                             devices.add(mDeviceMap.get(key));
                         mDelegate.onServiceStarted(devices);
                     }
-                    EventBus.getDefault().register(this);
                     break;
                 case CommandBase.COMMAND_BLUETOOTH_CONNECT:
                     if (!itr.hasNext())
@@ -132,10 +136,35 @@ public class BluetoothService extends Service {
                     address = itr.next();
                     disconnectDevice(address);
                     break;
+                case CommandBase.COMMAND_NEW_DEVICE_PAIRED:
+                    if (!itr.hasNext())
+                        throw new Exception("Command '" + comm + "' is malformed or missing parameters");
+                    address = itr.next();
+                    mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                    BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+                    BlueSenseDevice blueSenseDevice = new BlueSenseDevice(device);
+                    mDeviceMap.put(address, blueSenseDevice);
+                    if (mDelegate != null)
+                        mDelegate.onDeviceAdded(blueSenseDevice);
+                case CommandBase.COMMAND_SESSION_SETUP:
+                    if (!itr.hasNext())
+                        throw new Exception("Command '" + comm + "' is malformed or missing parameters");
+                    mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                    mClientsMap = new HashMap<>();
+                    mDeviceMap = new HashMap<>();
+                    while (itr.hasNext()) {
+                        address = itr.next();
+                        mDeviceMap.put(address, new BlueSenseDevice(mBluetoothAdapter.getRemoteDevice(address)));
+                    }
+                    if (mDelegate != null) {
+                        List<BlueSenseDevice> devices = new ArrayList<>();
+                        for (String key : mDeviceMap.keySet())
+                            devices.add(mDeviceMap.get(key));
+                        mDelegate.onServiceStarted(devices);
+                    }
             }
         }
     }
-
 
     public void connectDevice(String address) {
         mClientsMap.put(address, new BluetoothClient(mBluetoothAdapter, address));
@@ -174,7 +203,7 @@ public class BluetoothService extends Service {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeviceConnectionSuccess(ClientConnSuccess clientConnSuccess) {
         numDeviceConnected++;
-        mDeviceMap.get(clientConnSuccess.getMAddress()).setState(BluetoothState.STATE_CONNECTED);
+        mDeviceMap.get(clientConnSuccess.getMAddress()).setStatus(BluetoothState.STATE_CONNECTED);
         mNotification = new NotificationCompat.Builder(this)
                 .setContentTitle("BlueSenseHub")
                 .setTicker("Device: " + clientConnSuccess.getMAddress() + " connected!")
@@ -192,7 +221,7 @@ public class BluetoothService extends Service {
     public void onDeviceConnectionFail(ClientConnFailed clientConnFailed) {
         mClientsMap.get(clientConnFailed.getMAddress()).closeConnection();
         mClientsMap.remove(clientConnFailed.getMAddress());
-        mDeviceMap.get(clientConnFailed.getMAddress()).setState(BluetoothState.STATE_NONE);
+        mDeviceMap.get(clientConnFailed.getMAddress()).setStatus(BluetoothState.STATE_NONE);
         mNotification = new NotificationCompat.Builder(this)
                 .setContentTitle("BlueSenseHub")
                 .setTicker("Device: " + clientConnFailed.getMAddress() + " connected!")
@@ -210,7 +239,7 @@ public class BluetoothService extends Service {
     public void onDeviceDisconnectionSuccess(ClientDisconnSuccess clientDisconnSuccess) {
         numDeviceConnected--;
         mClientsMap.remove(clientDisconnSuccess.getMAddress());
-        mDeviceMap.get(clientDisconnSuccess.getMAddress()).setState(BluetoothState.STATE_NONE);
+        mDeviceMap.get(clientDisconnSuccess.getMAddress()).setStatus(BluetoothState.STATE_NONE);
         mNotification = new NotificationCompat.Builder(this)
                 .setContentTitle("BlueSenseHub")
                 .setTicker("Device: " + clientDisconnSuccess.getMAddress() + " disconnected!")

@@ -27,7 +27,7 @@ import uk.ac.sussex.android.bluesensehub.uicontroller.adapters.ScanBlueSenseDevi
 import uk.ac.sussex.android.bluesensehub.utilities.Const;
 
 /**
- * Created by mathias on 16/01/17.
+ * Created by ThiasTux.
  */
 public class ScanBlueSenseDevices extends Activity implements ScanBlueSenseDevicesAdapter.OnItemClickListener {
 

@@ -5,7 +5,7 @@ import android.util.Log;
 import java.util.ArrayList;
 
 /**
- * Created by mathias on 23/01/17.
+ * Created by ThiasTux.
  */
 
 public abstract class CommandBase {
@@ -22,6 +22,8 @@ public abstract class CommandBase {
     public static final String COMMAND_BLUETOOTH_START = "BTS";
     public static final String COMMAND_BLUETOOTH_CONNECT = "BTC";
     public static final String COMMAND_BLUETOOTH_DISCONNECT = "BTD";
+    public static final String COMMAND_SESSION_SETUP = "BSS";
+    public static final String COMMAND_NEW_DEVICE_PAIRED = "NDP";
 
     public abstract String getMessage();
 

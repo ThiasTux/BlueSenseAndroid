@@ -4,19 +4,20 @@ import android.bluetooth.BluetoothDevice;
 
 import lombok.Data;
 
+
 /**
- * Created by mathias on 18/01/17.
+ * Created by ThiasTux.
  */
 
 @Data
 public class BlueSenseDevice {
 
     private BluetoothDevice device;
-    private int state;
+    private int status;
 
     public BlueSenseDevice(BluetoothDevice device) {
         this.device = device;
-        state = BluetoothState.STATE_NONE;
+        status = BluetoothState.STATE_NONE;
     }
 
     public String getName() {

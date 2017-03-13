@@ -3,7 +3,7 @@ package uk.ac.sussex.android.bluesensehub.controllers.buses;
 import lombok.Getter;
 
 /**
- * Created by mathias on 18/01/17.
+ * Created by ThiasTux.
  */
 
 public class ClientConnAttemptFailed {

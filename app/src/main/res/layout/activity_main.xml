@@ -11,7 +11,8 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:elevation="0dp">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -52,12 +53,28 @@
         fab:menu_colorPressed="@color/colorPrimaryDark"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp">
+        android:layout_marginLeft="10dp"
+        android:id="@+id/fab_new_menu">
 
         <com.github.clans.fab.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:menu_fab_size="mini" />
+            app:fab_label="@string/new_streaming_session"
+            fab:fab_size="mini"
+            android:id="@+id/fab_new_streaming"
+            android:src="@drawable/ic_settings_ethernet_white_24dp"
+            fab:fab_colorNormal="@color/colorAccent"
+            fab:fab_colorPressed="@color/colorPrimaryDark" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_label="@string/new_logging_session"
+            fab:fab_size="mini"
+            android:id="@+id/fab_new_logging"
+            android:src="@drawable/ic_save_white_24dp"
+            fab:fab_colorNormal="@color/colorAccent"
+            fab:fab_colorPressed="@color/colorPrimaryDark" />
 
     </com.github.clans.fab.FloatingActionMenu>
 

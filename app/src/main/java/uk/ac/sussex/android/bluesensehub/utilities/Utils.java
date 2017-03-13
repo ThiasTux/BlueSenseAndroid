@@ -8,7 +8,7 @@ import uk.ac.sussex.android.bluesensehub.R;
 import uk.ac.sussex.android.bluesensehub.uicontroller.activities.MainActivity;
 
 /**
- * Created by mathias on 16/01/17.
+ * Created by ThiasTux.
  */
 public class Utils {
 
