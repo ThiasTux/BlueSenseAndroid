@@ -239,7 +239,7 @@ public class ConsoleSessionActivity extends AppCompatActivity implements Bluetoo
 
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.ASYNC)
     public void onDeviceConnected(ClientConnSuccess clientConnSuccess) {
         device.setStatus(BluetoothState.STATE_CONNECTED);
         ActionBar actionBar = getSupportActionBar();
@@ -248,7 +248,7 @@ public class ConsoleSessionActivity extends AppCompatActivity implements Bluetoo
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.ASYNC)
     public void onDeviceConnectionFailed(ClientConnFailed clientConnFailed) {
         ActionBar actionBar = getSupportActionBar();
         device = devicesList.get(clientConnFailed.getMAddress());
@@ -258,7 +258,7 @@ public class ConsoleSessionActivity extends AppCompatActivity implements Bluetoo
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.ASYNC)
     public void onDeviceDisconnected(ClientDisconnSuccess clientDisconnSuccess) {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -266,7 +266,7 @@ public class ConsoleSessionActivity extends AppCompatActivity implements Bluetoo
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.ASYNC)
     public void onDeviceConnection(ClientConnOngoing clientConnOngoing) {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -274,7 +274,7 @@ public class ConsoleSessionActivity extends AppCompatActivity implements Bluetoo
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.ASYNC)
     public void onMessageReceived(ClientBytesReceived clientBytesReceived) {
         consoleTextView.append(clientBytesReceived.getMessage());
     }

@@ -195,7 +195,7 @@ public class BluetoothService extends Service {
         return new ArrayList<>(mClientsMap.keySet());
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.ASYNC)
     public void onDeviceConnectionSuccess(ClientConnSuccess clientConnSuccess) {
         numDeviceConnected++;
         mDeviceMap.get(clientConnSuccess.getMAddress()).setStatus(BluetoothState.STATE_CONNECTED);
@@ -212,7 +212,7 @@ public class BluetoothService extends Service {
         notificationManager.notify(Const.NOTIFICATION_ID.FOREGROUND_SERVICE, mNotification);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.ASYNC)
     public void onDeviceConnectionFail(ClientConnFailed clientConnFailed) {
         mClientsMap.remove(clientConnFailed.getMAddress());
         mDeviceMap.get(clientConnFailed.getMAddress()).setStatus(BluetoothState.STATE_NONE);
@@ -229,7 +229,7 @@ public class BluetoothService extends Service {
         notificationManager.notify(Const.NOTIFICATION_ID.FOREGROUND_SERVICE, mNotification);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.ASYNC)
     public void onDeviceDisconnectionSuccess(ClientDisconnSuccess clientDisconnSuccess) {
         numDeviceConnected--;
         mClientsMap.remove(clientDisconnSuccess.getMAddress());

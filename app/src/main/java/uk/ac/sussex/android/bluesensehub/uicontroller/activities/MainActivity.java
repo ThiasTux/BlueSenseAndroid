@@ -306,32 +306,32 @@ public class MainActivity extends AppCompatActivity implements BlueSenseDevicesA
         adapter.notifyDataSetChanged();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.ASYNC)
     public void onDeviceConnected(ClientConnSuccess clientConnSuccess) {
         adapter.setStatus(clientConnSuccess.getMAddress(), BluetoothState.STATE_CONNECTED);
         adapter.notifyItemChanged(clientConnSuccess.getMAddress());
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.ASYNC)
     public void onDeviceConnectionFailed(ClientConnFailed clientConnFailed) {
         Toast.makeText(this, "Connection failed: " + clientConnFailed.getMAddress(), Toast.LENGTH_SHORT).show();
         adapter.setStatus(clientConnFailed.getMAddress(), BluetoothState.STATE_NONE);
         adapter.notifyItemChanged(clientConnFailed.getMAddress());
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.ASYNC)
     public void onDeviceDisconnected(ClientDisconnSuccess clientDisconnSuccess) {
         adapter.setStatus(clientDisconnSuccess.getMAddress(), BluetoothState.STATE_NONE);
         adapter.notifyItemChanged(clientDisconnSuccess.getMAddress());
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.ASYNC)
     public void onDeviceConnecting(ClientConnOngoing clientConnOngoing) {
         adapter.setStatus(clientConnOngoing.getMAddress(), BluetoothState.STATE_CONNECTING);
         adapter.notifyItemChanged(clientConnOngoing.getMAddress());
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.ASYNC)
     public void onBytesReceived(ClientBytesReceived clientBytesReceived) {
 
     }
