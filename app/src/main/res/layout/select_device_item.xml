@@ -33,6 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
-        android:id="@+id/selected_checkbox" />
+        android:id="@+id/selected_checkbox"
+        android:clickable="false" />
 
 </RelativeLayout>

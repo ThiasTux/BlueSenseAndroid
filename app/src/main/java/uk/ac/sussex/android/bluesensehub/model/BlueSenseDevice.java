@@ -14,10 +14,12 @@ public class BlueSenseDevice {
 
     private BluetoothDevice device;
     private int status;
+    private String messagesQueue;
 
     public BlueSenseDevice(BluetoothDevice device) {
         this.device = device;
         status = BluetoothState.STATE_NONE;
+        messagesQueue = "";
     }
 
     public String getName() {
@@ -28,4 +30,7 @@ public class BlueSenseDevice {
         return device.getAddress();
     }
 
+    public void appendMessage(String message) {
+        messagesQueue += message;
+    }
 }

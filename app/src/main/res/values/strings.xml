@@ -26,4 +26,24 @@
     <string name="yes">yes</string>
     <string name="new_logging_session">New Logging Session</string>
     <string name="actions">actions</string>
+    <string name="no_device_selected">No device selected. Choose at least one device to start a session.</string>
+    <string name="send">send</string>
+    <string name="new_console_session">New Console Session</string>
+    <string name="action_refresh_connection">Reconnect</string>
+    <string name="action_change_device">Change device</string>
+    <string name="choose_device">Choose a device:</string>
+    <string name="enter_command">Enter a command</string>
+    <string name="pref_streaming_cat_title">Streaming session</string>
+    <string name="pref_streaming_default_port_title">Default port number</string>
+    <string name="pref_streaming_default_port_summary">Default value for the port to transmit the stream</string>
+    <string name="pref_streaming_save_on_file_title">Save on file</string>
+    <string name="pref_streaming_save_on_file_summary">Save on file by default</string>
+    <string name="pref_logging_cat_title">Logging session</string>
+    <string name="pref_log_commands_title">Commands</string>
+    <string name="pref_log_commands_summary">Define the quick commands</string>
+    <string name="define_commands">Define commands</string>
+    <string name="no_quick_commands">No quick commands added yet.</string>
+    <string name="enter_name_command">Enter a command name</string>
+    <string name="command_name">Name</string>
+    <string name="command_value">Value</string>
 </resources>

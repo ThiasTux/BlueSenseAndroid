@@ -64,10 +64,17 @@ public class SelectDevicesActivity extends Activity implements SelectDevicesAdap
 
     @OnClick(R.id.confirm_button)
     public void onConfirmButtonClick() {
-        Intent intent = new Intent();
-        intent.putExtra(Const.SELECTED_DEVICES, status);
-        setResult(Activity.RESULT_OK, intent);
-        finish();
+        boolean tmp = false;
+        for (boolean b : status)
+            tmp = tmp | b;
+        if (!tmp)
+            Toast.makeText(this, R.string.no_device_selected, Toast.LENGTH_SHORT).show();
+        else {
+            Intent intent = new Intent();
+            intent.putExtra(Const.SELECTED_DEVICES, status);
+            setResult(Activity.RESULT_OK, intent);
+            finish();
+        }
     }
 
     @OnClick(R.id.cancel_button)

@@ -29,7 +29,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import uk.ac.sussex.android.bluesensehub.R;
 import uk.ac.sussex.android.bluesensehub.controllers.BluetoothServiceDelegate;
+import uk.ac.sussex.android.bluesensehub.controllers.buses.ClientBytesReceived;
 import uk.ac.sussex.android.bluesensehub.controllers.buses.ClientConnFailed;
+import uk.ac.sussex.android.bluesensehub.controllers.buses.ClientConnOngoing;
 import uk.ac.sussex.android.bluesensehub.controllers.buses.ClientConnSuccess;
 import uk.ac.sussex.android.bluesensehub.controllers.buses.ClientDisconnSuccess;
 import uk.ac.sussex.android.bluesensehub.controllers.services.BluetoothService;
@@ -80,6 +82,19 @@ public class MainActivity extends AppCompatActivity implements BlueSenseDevicesA
         adapter.setClickListener(this);
         bluesenseDevicesView.setAdapter(adapter);
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
+
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if (mBluetoothAdapter == null) {
@@ -95,19 +110,13 @@ public class MainActivity extends AppCompatActivity implements BlueSenseDevicesA
             startService(new Intent(this, BluetoothService.class)
                     .putExtra(Const.COMMAND_SERVICE_INTENT_KEY, new CommandBTS().getMessage()));
         }
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        EventBus.getDefault().register(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        EventBus.getDefault().unregister(this);
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -121,8 +130,9 @@ public class MainActivity extends AppCompatActivity implements BlueSenseDevicesA
     @Override
     public void onBackPressed() {
         if (doubleBackPressedOnce) {
-            super.onBackPressed();
-            return;
+            Intent stopServiceIntent = new Intent(MainActivity.this, BluetoothService.class);
+            stopService(stopServiceIntent);
+            this.finish();
         }
         doubleBackPressedOnce = true;
         Toast.makeText(this, "Please, click BACK again to exit", Toast.LENGTH_SHORT).show();
@@ -153,6 +163,24 @@ public class MainActivity extends AppCompatActivity implements BlueSenseDevicesA
                         .putExtra(Const.COMMAND_SERVICE_INTENT_KEY,
                                 new CommandNBD(address).getMessage()));
             }
+        } else if (requestCode == Const.REQUEST_CONSOLE_SELECT_DEVICE) {
+            if (resultCode == Activity.RESULT_OK) {
+                Intent intent = new Intent(this, ConsoleSessionActivity.class);
+                ArrayList<String> devices = new ArrayList<>();
+                boolean[] status = data.getBooleanArrayExtra(Const.SELECTED_DEVICES);
+                for (int i = 0; i < bluesenseDevices.size(); i++) {
+                    if (status[i])
+                        devices.add(bluesenseDevices.get(i).getAddress());
+                }
+                intent.putStringArrayListExtra(Const.SELECTED_DEVICES, devices);
+                for (BlueSenseDevice device : bluesenseDevices) {
+                    startService(new Intent(this, BluetoothService.class)
+                            .putExtra(Const.COMMAND_SERVICE_INTENT_KEY,
+                                    new CommandBTD(device.getAddress()).getMessage()));
+                }
+                disconnectAll();
+                startActivity(intent);
+            }
         } else if (requestCode == Const.REQUEST_STREAM_SELECT_DEVICES) {
             if (resultCode == Activity.RESULT_OK) {
                 Intent intent = new Intent(this, StreamingSessionActivity.class);
@@ -173,13 +201,13 @@ public class MainActivity extends AppCompatActivity implements BlueSenseDevicesA
         } else if (requestCode == Const.REQUEST_LOG_SELECT_DEVICES) {
             if (resultCode == Activity.RESULT_OK) {
                 Intent intent = new Intent(this, LoggingSessionActivity.class);
-                List<String> devices = new ArrayList<>();
+                ArrayList<String> devices = new ArrayList<>();
                 boolean[] status = data.getBooleanArrayExtra(Const.SELECTED_DEVICES);
                 for (int i = 0; i < bluesenseDevices.size(); i++) {
                     if (status[i])
                         devices.add(bluesenseDevices.get(i).getAddress());
                 }
-                intent.putExtra(Const.SELECTED_DEVICES, devices.toArray());
+                intent.putStringArrayListExtra(Const.SELECTED_DEVICES, devices);
                 for (BlueSenseDevice device : bluesenseDevices) {
                     startService(new Intent(this, BluetoothService.class)
                             .putExtra(Const.COMMAND_SERVICE_INTENT_KEY,
@@ -205,7 +233,7 @@ public class MainActivity extends AppCompatActivity implements BlueSenseDevicesA
                 pairNewDevices();
                 break;
             case R.id.action_settings:
-                Intent intent = new Intent(this, PreferenceActivity.class);
+                Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 break;
         }
@@ -216,19 +244,34 @@ public class MainActivity extends AppCompatActivity implements BlueSenseDevicesA
     @Override
     public void onItemClick(View v, int position) {
         int state = adapter.getItem(position).getStatus();
-        if (state == BluetoothState.STATE_CONNECTED) {
-            startService(new Intent(this, BluetoothService.class)
-                    .putExtra(Const.COMMAND_SERVICE_INTENT_KEY,
-                            new CommandBTD(adapter.getItem(position).getAddress()).getMessage()));
-            adapter.setStatus(position, BluetoothState.STATE_NONE);
-            adapter.notifyItemChanged(position);
-        } else {
+        if (state == BluetoothState.STATE_NONE) {
             startService(new Intent(this, BluetoothService.class)
                     .putExtra(Const.COMMAND_SERVICE_INTENT_KEY,
                             new CommandBTC(adapter.getItem(position).getAddress()).getMessage()));
-            adapter.setStatus(position, BluetoothState.STATE_CONNECTING);
-            adapter.notifyItemChanged(position);
+        } else {
+            startService(new Intent(this, BluetoothService.class)
+                    .putExtra(Const.COMMAND_SERVICE_INTENT_KEY,
+                            new CommandBTD(adapter.getItem(position).getAddress()).getMessage()));
         }
+    }
+
+    public void disconnectAll() {
+        for (BlueSenseDevice device : bluesenseDevices) {
+            if (device.getStatus() != BluetoothState.STATE_NONE) {
+                startService(new Intent(this, BluetoothService.class)
+                        .putExtra(Const.COMMAND_SERVICE_INTENT_KEY,
+                                new CommandBTD(device.getAddress()).getMessage()));
+                adapter.setStatus(device.getAddress(), BluetoothState.STATE_NONE);
+                adapter.notifyItemChanged(device.getAddress());
+            }
+        }
+    }
+
+    @OnClick(R.id.fab_new_console)
+    public void newConsoleSession() {
+        disconnectAll();
+        Intent intent = new Intent(this, ConsoleSessionActivity.class);
+        startActivity(intent);
     }
 
     @OnClick(R.id.fab_new_streaming)
@@ -280,6 +323,17 @@ public class MainActivity extends AppCompatActivity implements BlueSenseDevicesA
     public void onDeviceDisconnected(ClientDisconnSuccess clientDisconnSuccess) {
         adapter.setStatus(clientDisconnSuccess.getMAddress(), BluetoothState.STATE_NONE);
         adapter.notifyItemChanged(clientDisconnSuccess.getMAddress());
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onDeviceConnecting(ClientConnOngoing clientConnOngoing) {
+        adapter.setStatus(clientConnOngoing.getMAddress(), BluetoothState.STATE_CONNECTING);
+        adapter.notifyItemChanged(clientConnOngoing.getMAddress());
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onBytesReceived(ClientBytesReceived clientBytesReceived) {
+
     }
 
     @Override

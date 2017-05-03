@@ -1,4 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen>
-
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="pref_key_stream_settings"
+        android:title="@string/pref_streaming_cat_title">
+        <EditTextPreference
+            android:key="pref_key_stream_default_port"
+            android:summary="@string/pref_streaming_default_port_summary"
+            android:title="@string/pref_streaming_default_port_title"
+            android:defaultValue="9432"
+            android:inputType="number" />
+        <CheckBoxPreference
+            android:key="pref_key_stream_default_log_on_file"
+            android:title="@string/pref_streaming_save_on_file_title"
+            android:summary="@string/pref_streaming_save_on_file_summary" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="pref_key_log_settings"
+        android:title="@string/pref_logging_cat_title">
+        <Preference
+            android:title="@string/pref_log_commands_title"
+            android:summary="@string/pref_log_commands_summary">
+            <intent android:action="uk.ac.sussex.android.bluesensehub.utilities.Const.DEFINE_COMMANDS" />
+        </Preference>
+    </PreferenceCategory>
 </PreferenceScreen>

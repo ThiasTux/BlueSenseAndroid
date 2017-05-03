@@ -32,6 +32,11 @@
             android:excludeFromRecents="true"
             android:theme="@style/DialogTheme" />
         <activity
+            android:name=".uicontroller.activities.ConsoleSessionActivity"
+            android:launchMode="singleTask"
+            android:configChanges="keyboardHidden|orientation"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".uicontroller.activities.StreamingSessionActivity"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -40,9 +45,18 @@
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".uicontroller.activities.PreferenceActivity"
-            android:launchMode="singleTask"
+            android:name=".uicontroller.activities.SettingsActivity"
+            android:label="@string/action_settings"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".uicontroller.activities.DefineQuickCommandsActivity"
+            android:label="@string/action_settings"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="uk.ac.sussex.android.bluesensehub.utilities.Const.DEFINE_COMMANDS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <service
             android:name=".controllers.services.BluetoothService"

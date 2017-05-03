@@ -15,7 +15,7 @@ public abstract class CommandBase {
     public static final int MAX_LENGTH = 60;
 
     protected static final String COMMAND_START = "##";
-    protected static final String COMMAND_SEPARATOR = "!";
+    protected static final String COMMAND_SEPARATOR = "¬";
     protected static final String PARAMETER_SEPARATOR = ";";
     protected static final String FILLING_TOKEN = "*";
 
@@ -24,6 +24,7 @@ public abstract class CommandBase {
     public static final String COMMAND_BLUETOOTH_DISCONNECT = "BTD";
     public static final String COMMAND_SESSION_SETUP = "BSS";
     public static final String COMMAND_NEW_DEVICE_PAIRED = "NDP";
+    public static final String COMMAND_SEND_MESSAGE = "BSM";
 
     public abstract String getMessage();
 

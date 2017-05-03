@@ -12,10 +12,10 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.UUID;
 
+import uk.ac.sussex.android.bluesensehub.controllers.buses.ClientBytesReceived;
 import uk.ac.sussex.android.bluesensehub.controllers.buses.ClientConnFailed;
 import uk.ac.sussex.android.bluesensehub.controllers.buses.ClientConnSuccess;
 import uk.ac.sussex.android.bluesensehub.controllers.buses.ClientDisconnSuccess;
-import uk.ac.sussex.android.bluesensehub.utilities.Const;
 
 /**
  * Created by ThiasTux.
@@ -38,7 +38,7 @@ public class BluetoothClient implements Runnable {
     public BluetoothClient(BluetoothAdapter bluetoothAdapter, String macAddress) {
         mBluetoothAdapter = bluetoothAdapter;
         mMacAddress = macAddress;
-        mUuid = UUID.fromString(Const.UUID + macAddress.replace(":", ""));
+        mUuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     }
 
     @Override
@@ -48,7 +48,7 @@ public class BluetoothClient implements Runnable {
         int attempts = 0;
 
         while (mInputStream == null && attempts < 3) {
-            mBluetoothConnector = new BluetoothConnector(mDevice, true, mBluetoothAdapter, mUuid);
+            mBluetoothConnector = new BluetoothConnector(mDevice, false, mBluetoothAdapter, mUuid);
 
             try {
                 mSocket = mBluetoothConnector.connect().getUnderlyingSocket();
@@ -81,13 +81,17 @@ public class BluetoothClient implements Runnable {
                 final StringBuilder sb = new StringBuilder();
                 bytesRead = mInputStream.read(buffer);
                 if (bytesRead != -1) {
-                    //TODO put logic to understand the byte
+                    String result = "";
+                    while ((bytesRead == bufferSize) && (buffer[bufferSize] != 0)) {
+                        result += new String(buffer, 0, bytesRead);
+                        bytesRead = mInputStream.read(buffer);
+                    }
+                    result += new String(buffer, 0, bytesRead);
+                    sb.append(result);
                 }
 
-
+                EventBus.getDefault().post(new ClientBytesReceived(sb.toString(), mMacAddress));
             }
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }
