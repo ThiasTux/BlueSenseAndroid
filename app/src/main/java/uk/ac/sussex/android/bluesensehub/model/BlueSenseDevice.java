@@ -2,6 +2,8 @@ package uk.ac.sussex.android.bluesensehub.model;
 
 import android.bluetooth.BluetoothDevice;
 
+import java.io.Serializable;
+
 import lombok.Data;
 
 
@@ -10,7 +12,7 @@ import lombok.Data;
  */
 
 @Data
-public class BlueSenseDevice {
+public class BlueSenseDevice implements Serializable {
 
     private BluetoothDevice device;
     private int status;

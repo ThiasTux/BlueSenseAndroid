@@ -23,4 +23,14 @@
             <intent android:action="uk.ac.sussex.android.bluesensehub.utilities.Const.DEFINE_COMMANDS" />
         </Preference>
     </PreferenceCategory>
+    <PreferenceCategory
+        android:key="pref_key_log_settings"
+        android:title="Loggings Sensors Setup">
+        <Preference
+            android:title="Sensors setups"
+            android:summary="Define and edit sensors setups">
+            <intent android:action="uk.ac.sussex.android.bluesensehub.utilities.Const.DEFINE_SETUPS" />
+        </Preference>
+
+    </PreferenceCategory>
 </PreferenceScreen>

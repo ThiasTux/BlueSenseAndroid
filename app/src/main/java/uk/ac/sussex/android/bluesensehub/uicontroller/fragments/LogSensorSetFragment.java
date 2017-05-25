@@ -1,6 +1,5 @@
 package uk.ac.sussex.android.bluesensehub.uicontroller.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -27,72 +25,74 @@ import uk.ac.sussex.android.bluesensehub.controllers.buses.ClientConnSuccess;
 import uk.ac.sussex.android.bluesensehub.controllers.buses.ClientDisconnSuccess;
 import uk.ac.sussex.android.bluesensehub.model.BlueSenseDevice;
 import uk.ac.sussex.android.bluesensehub.model.BluetoothState;
+import uk.ac.sussex.android.bluesensehub.model.LogSensorSet;
 import uk.ac.sussex.android.bluesensehub.uicontroller.adapters.LogDevicesAdapter;
 
 /**
  * Created by ThiasTux.
  */
 
-public class LoggingStatusFragment extends Fragment {
+public class LogSensorSetFragment extends Fragment {
 
+    private static final String SET_ID = "Set";
+    private static final String SENSOR_SET = "SetDevices";
     @BindView(R.id.device_list)
     RecyclerView devicesListRV;
-
-    private DeviceHandler activity;
-    private ArrayList<BlueSenseDevice> devices;
     private LogDevicesAdapter adapter;
+    private LogSensorSet logSensorSet;
+    private ArrayList<BlueSenseDevice> blueSenseDevices;
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.activity = (DeviceHandler) activity;
+    static LogSensorSetFragment newInstance(int position, LogSensorSet sensorSet) {
+        LogSensorSetFragment fragment = new LogSensorSetFragment();
+        Bundle args = new Bundle();
+
+        args.putInt(SET_ID, position);
+
+        args.putSerializable(SENSOR_SET, sensorSet);
+
+        fragment.setArguments(args);
+
+        return fragment;
     }
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_logging_status, container, false);
+        View view = inflater.inflate(R.layout.fragment_log_set, container, false);
         ButterKnife.bind(this, view);
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        devices = activity.getDevices();
-
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
+
+        logSensorSet = (LogSensorSet) getArguments().getSerializable(SENSOR_SET);
+
         llm.setOrientation(LinearLayoutManager.VERTICAL);
-        adapter = new LogDevicesAdapter(devices);
+        blueSenseDevices = logSensorSet.getDevices();
+        adapter = new LogDevicesAdapter(blueSenseDevices);
         devicesListRV.setLayoutManager(llm);
         devicesListRV.setHasFixedSize(true);
         devicesListRV.setAdapter(adapter);
 
-        activity.connectDevices();
+        return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        EventBus.getDefault().unregister(this);
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this);
     }
 
-    public interface DeviceHandler {
-        ArrayList<BlueSenseDevice> getDevices();
-
-        void connectDevices();
+    public void setLogSensorSet(LogSensorSet logSensorSet) {
+        this.logSensorSet = logSensorSet;
     }
+
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
     public void onDeviceConnected(ClientConnSuccess clientConnSuccess) {
@@ -102,7 +102,6 @@ public class LoggingStatusFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
     public void onDeviceConnectionFailed(ClientConnFailed clientConnFailed) {
-        Toast.makeText(getContext(), "Connection failed: " + clientConnFailed.getMAddress(), Toast.LENGTH_SHORT).show();
         adapter.setStatus(clientConnFailed.getMAddress(), BluetoothState.STATE_NONE);
         adapter.notifyItemChanged(clientConnFailed.getMAddress());
     }
@@ -124,4 +123,5 @@ public class LoggingStatusFragment extends Fragment {
         /*adapter.appendTextToDevice(clientBytesReceived.getAddress(), clientBytesReceived.getMessage());
         adapter.notifyItemChanged(clientBytesReceived.getMessage());*/
     }
+
 }

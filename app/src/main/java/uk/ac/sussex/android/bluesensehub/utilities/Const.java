@@ -25,6 +25,10 @@ public class Const {
     public static final String PREFS_SAVED_COMMANDS = PREFS_NAME + ".saved_commands";
 
     public static final String DEFINE_COMMANDS = PACKAGE_NAME + ".DEFINE_COMMANDS";
+    public static final int MAX_DEVICES = 5;
+    public static final int REQUEST_ADD_SETUP = 1001;
+    public static final String PREFS_SAVED_SETUPS = PREFS_NAME + ".saved_setups";
+    public static final String CHOSEN_LOG_SETUP = PACKAGE_NAME + ".chosen_log_setup";
 
     public interface NOTIFICATION_ID {
         public static int FOREGROUND_SERVICE = 101;

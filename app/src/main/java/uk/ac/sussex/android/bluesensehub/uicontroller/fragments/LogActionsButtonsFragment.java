@@ -30,7 +30,7 @@ import uk.ac.sussex.android.bluesensehub.utilities.Utils;
  * Created by ThiasTux.
  */
 
-public class LoggingActionsButtonsFragment extends Fragment implements CommandsAdapter.ClickListener {
+public class LogActionsButtonsFragment extends Fragment implements CommandsAdapter.ClickListener {
 
     @BindView(R.id.commands_list)
     RecyclerView commandsListRV;
@@ -56,7 +56,7 @@ public class LoggingActionsButtonsFragment extends Fragment implements CommandsA
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_logging_actions_buttons, container, false);
+        View view = inflater.inflate(R.layout.fragment_log_actions_buttons, container, false);
         ButterKnife.bind(this, view);
 
         sensorCommandsList = getSavedCommands();

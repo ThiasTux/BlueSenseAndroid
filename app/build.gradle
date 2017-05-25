@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '25.0.3'
     defaultConfig {
         applicationId "uk.ac.sussex.android.bluesensehub"
         minSdkVersion 21
@@ -20,7 +20,7 @@ android {
 }
 
 ext {
-    supportLibVersion = '25.3.0'
+    supportLibVersion = '25.3.1'
 }
 
 dependencies {
@@ -42,7 +42,7 @@ dependencies {
     //Event bus
     compile 'org.greenrobot:eventbus:3.0.0'
     //Lombok plugin
-    provided "org.projectlombok:lombok:1.12.6"
+    provided "org.projectlombok:lombok:1.16.16"
     //Gson
     compile 'com.google.code.gson:gson:2.8.0'
 

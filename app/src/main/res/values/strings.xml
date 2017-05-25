@@ -43,7 +43,17 @@
     <string name="pref_log_commands_summary">Define the quick commands</string>
     <string name="define_commands">Define commands</string>
     <string name="no_quick_commands">No quick commands added yet.</string>
+    <string name="no_setups">No setups added yet.</string>
     <string name="enter_name_command">Enter a command name</string>
     <string name="command_name">Name</string>
     <string name="command_value">Value</string>
+    <string name="logging_setups">Logging setups</string>
+    <string name="new_setup_label">New setup</string>
+    <string name="new_setup_name">New setup name</string>
+    <string name="number_of_sets">Number of sets</string>
+    <string name="no_setup_name">No setup name specified.</string>
+    <string name="action_reset_setups">Reset setups</string>
+    <string name="select_setup_label">Select setup</string>
+    <string name="action_connect">Connect</string>
+    <string name="action_disconnect">Disconnect</string>
 </resources>

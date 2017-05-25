@@ -22,6 +22,7 @@ public abstract class CommandBase {
     public static final String COMMAND_BLUETOOTH_START = "BTS";
     public static final String COMMAND_BLUETOOTH_CONNECT = "BTC";
     public static final String COMMAND_BLUETOOTH_DISCONNECT = "BTD";
+    public static final String COMMAND_BLUETOOTH_STOP = "BTDA";
     public static final String COMMAND_SESSION_SETUP = "BSS";
     public static final String COMMAND_NEW_DEVICE_PAIRED = "NDP";
     public static final String COMMAND_SEND_MESSAGE = "BSM";

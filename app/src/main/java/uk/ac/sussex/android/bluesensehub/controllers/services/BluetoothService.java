@@ -46,7 +46,6 @@ public class BluetoothService extends Service {
     private BluetoothAdapter mBluetoothAdapter;
     private Notification mNotification;
     private static BluetoothServiceDelegate mDelegate;
-    private int numDeviceConnected = 0;
     private boolean isServiceStarted = false;
     private boolean isAndroid = false;
 
@@ -139,6 +138,11 @@ public class BluetoothService extends Service {
                     address = itr.next();
                     disconnectDevice(address);
                     break;
+                case CommandBase.COMMAND_BLUETOOTH_STOP:
+                    disconnectAll();
+                    stopForeground(true);
+                    stopSelf();
+                    break;
                 case CommandBase.COMMAND_NEW_DEVICE_PAIRED:
                     if (!itr.hasNext())
                         throw new Exception("Command '" + comm + "' is malformed or missing parameters");
@@ -197,12 +201,12 @@ public class BluetoothService extends Service {
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
     public void onDeviceConnectionSuccess(ClientConnSuccess clientConnSuccess) {
-        numDeviceConnected++;
+        int numDevicesConnected = getNumDevicesConnected();
         mDeviceMap.get(clientConnSuccess.getMAddress()).setStatus(BluetoothState.STATE_CONNECTED);
         mNotification = new NotificationCompat.Builder(this)
                 .setContentTitle("BlueSenseHub")
                 .setTicker("Device: " + clientConnSuccess.getMAddress() + " connected!")
-                .setContentText(getConnectionStatusString())
+                .setContentText(getConnectionStatusString(numDevicesConnected))
                 .setSmallIcon(R.drawable.ic_not)
                 .setContentIntent(PendingIntent.getActivity(this, 1, new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT))
                 .setPriority(Notification.PRIORITY_HIGH)
@@ -214,12 +218,13 @@ public class BluetoothService extends Service {
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
     public void onDeviceConnectionFail(ClientConnFailed clientConnFailed) {
+        int numDevicesConnected = getNumDevicesConnected();
         mClientsMap.remove(clientConnFailed.getMAddress());
         mDeviceMap.get(clientConnFailed.getMAddress()).setStatus(BluetoothState.STATE_NONE);
         mNotification = new NotificationCompat.Builder(this)
                 .setContentTitle("BlueSenseHub")
                 .setTicker("Device: " + clientConnFailed.getMAddress() + " connected!")
-                .setContentText(getConnectionStatusString())
+                .setContentText(getConnectionStatusString(numDevicesConnected))
                 .setSmallIcon(R.drawable.ic_not)
                 .setContentIntent(PendingIntent.getActivity(this, 1, new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT))
                 .setPriority(Notification.PRIORITY_HIGH)
@@ -231,13 +236,13 @@ public class BluetoothService extends Service {
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
     public void onDeviceDisconnectionSuccess(ClientDisconnSuccess clientDisconnSuccess) {
-        numDeviceConnected--;
+        int numDevicesConnected = getNumDevicesConnected();
         mClientsMap.remove(clientDisconnSuccess.getMAddress());
         mDeviceMap.get(clientDisconnSuccess.getMAddress()).setStatus(BluetoothState.STATE_NONE);
         mNotification = new NotificationCompat.Builder(this)
                 .setContentTitle("BlueSenseHub")
                 .setTicker("Device: " + clientDisconnSuccess.getMAddress() + " disconnected!")
-                .setContentText(getConnectionStatusString())
+                .setContentText(getConnectionStatusString(numDevicesConnected))
                 .setSmallIcon(R.drawable.ic_not)
                 .setContentIntent(PendingIntent.getActivity(this, 1, new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT))
                 .setPriority(Notification.PRIORITY_HIGH)
@@ -247,8 +252,17 @@ public class BluetoothService extends Service {
         notificationManager.notify(Const.NOTIFICATION_ID.FOREGROUND_SERVICE, mNotification);
     }
 
-    private String getConnectionStatusString() {
-        return (numDeviceConnected == 0 ? "No device connected" : numDeviceConnected + " devices connected");
+    private int getNumDevicesConnected() {
+        int numConnected = 0;
+        for (String key : mClientsMap.keySet()) {
+            if (mClientsMap.get(key).getState() == BluetoothState.STATE_CONNECTED)
+                numConnected++;
+        }
+        return numConnected;
+    }
+
+    private String getConnectionStatusString(int numDevicesConnected) {
+        return (numDevicesConnected == 0 ? "No device connected" : numDevicesConnected + " devices connected");
     }
 
     public static void setDelegate(BluetoothServiceDelegate delegate) {

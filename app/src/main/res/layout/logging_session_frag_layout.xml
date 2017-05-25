@@ -27,14 +27,14 @@
 
         <fragment
             android:id="@+id/logging_status_fragment"
-            android:name="uk.ac.sussex.android.bluesensehub.uicontroller.fragments.LoggingStatusFragment"
+            android:name="uk.ac.sussex.android.bluesensehub.uicontroller.fragments.LogStatusFragment"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight=".33" />
 
         <fragment
             android:id="@+id/logging_actions_buttons_fragment"
-            android:name="uk.ac.sussex.android.bluesensehub.uicontroller.fragments.LoggingActionsButtonsFragment"
+            android:name="uk.ac.sussex.android.bluesensehub.uicontroller.fragments.LogActionsButtonsFragment"
             android:layout_width="0dp"
             android:layout_weight="0.67"
             android:layout_height="match_parent" />

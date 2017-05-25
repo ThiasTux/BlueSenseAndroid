@@ -3,6 +3,7 @@ package uk.ac.sussex.android.bluesensehub.uicontroller.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -16,7 +17,7 @@ import uk.ac.sussex.android.bluesensehub.R;
  * Created by ThiasTux.
  */
 
-public class StreamingStatusFragment extends Fragment {
+public class StreamParametersFragment extends Fragment {
 
     private FragmentActivity activity;
 
@@ -27,8 +28,14 @@ public class StreamingStatusFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Nullable
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_streaming_status, container, false);
+        View view = inflater.inflate(R.layout.fragment_stream_parameters, container, false);
         ButterKnife.bind(this, view);
         return view;
     }

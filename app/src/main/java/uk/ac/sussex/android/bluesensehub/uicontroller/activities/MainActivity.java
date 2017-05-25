@@ -39,6 +39,7 @@ import uk.ac.sussex.android.bluesensehub.model.BlueSenseDevice;
 import uk.ac.sussex.android.bluesensehub.model.BluetoothState;
 import uk.ac.sussex.android.bluesensehub.model.commands.CommandBTC;
 import uk.ac.sussex.android.bluesensehub.model.commands.CommandBTD;
+import uk.ac.sussex.android.bluesensehub.model.commands.CommandBTDA;
 import uk.ac.sussex.android.bluesensehub.model.commands.CommandBTS;
 import uk.ac.sussex.android.bluesensehub.model.commands.CommandNBD;
 import uk.ac.sussex.android.bluesensehub.uicontroller.adapters.BlueSenseDevicesAdapter;
@@ -183,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements BlueSenseDevicesA
             }
         } else if (requestCode == Const.REQUEST_STREAM_SELECT_DEVICES) {
             if (resultCode == Activity.RESULT_OK) {
-                Intent intent = new Intent(this, StreamingSessionActivity.class);
+                Intent intent = new Intent(this, StreamSessionActivity.class);
                 List<String> devices = new ArrayList<>();
                 boolean[] status = data.getBooleanArrayExtra(Const.SELECTED_DEVICES);
                 for (int i = 0; i < bluesenseDevices.size(); i++) {
@@ -200,19 +201,12 @@ public class MainActivity extends AppCompatActivity implements BlueSenseDevicesA
             }
         } else if (requestCode == Const.REQUEST_LOG_SELECT_DEVICES) {
             if (resultCode == Activity.RESULT_OK) {
-                Intent intent = new Intent(this, LoggingSessionActivity.class);
-                ArrayList<String> devices = new ArrayList<>();
-                boolean[] status = data.getBooleanArrayExtra(Const.SELECTED_DEVICES);
-                for (int i = 0; i < bluesenseDevices.size(); i++) {
-                    if (status[i])
-                        devices.add(bluesenseDevices.get(i).getAddress());
-                }
-                intent.putStringArrayListExtra(Const.SELECTED_DEVICES, devices);
-                for (BlueSenseDevice device : bluesenseDevices) {
-                    startService(new Intent(this, BluetoothService.class)
-                            .putExtra(Const.COMMAND_SERVICE_INTENT_KEY,
-                                    new CommandBTD(device.getAddress()).getMessage()));
-                }
+                Intent intent = new Intent(this, LogSessionActivity.class);
+                intent.putExtra(Const.CHOSEN_LOG_SETUP,
+                        data.getStringExtra(Const.CHOSEN_LOG_SETUP));
+                startService(new Intent(this, BluetoothService.class)
+                        .putExtra(Const.COMMAND_SERVICE_INTENT_KEY,
+                                new CommandBTDA().getMessage()));
                 startActivity(intent);
             }
         }
@@ -286,7 +280,7 @@ public class MainActivity extends AppCompatActivity implements BlueSenseDevicesA
 
     @OnClick(R.id.fab_new_logging)
     public void newLoggingSession() {
-        Intent intent = new Intent(this, SelectDevicesActivity.class);
+        Intent intent = new Intent(this, SelectSetupActivity.class);
         ArrayList<BluetoothDevice> tmp = new ArrayList<>();
         for (BlueSenseDevice device : bluesenseDevices)
             tmp.add(device.getDevice());

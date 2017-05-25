@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -35,6 +36,7 @@ public class SelectDevicesActivity extends Activity implements SelectDevicesAdap
     @BindView(R.id.deselect_all_button)
     Button deselectAllButton;
     private List<BluetoothDevice> bluetoothDevices;
+    private ArrayList<BluetoothDevice> selectedDevices;
     private boolean[] status;
     private SelectDevicesAdapter adapter;
 
@@ -47,6 +49,7 @@ public class SelectDevicesActivity extends Activity implements SelectDevicesAdap
 
         Intent intent = getIntent();
         bluetoothDevices = intent.getParcelableArrayListExtra(Const.DEVICES_LIST);
+        selectedDevices = new ArrayList<>();
 
         status = new boolean[bluetoothDevices.size()];
 
@@ -65,13 +68,17 @@ public class SelectDevicesActivity extends Activity implements SelectDevicesAdap
     @OnClick(R.id.confirm_button)
     public void onConfirmButtonClick() {
         boolean tmp = false;
-        for (boolean b : status)
+        for (int i = 0; i < status.length; i++) {
+            boolean b = status[i];
+            if (b)
+                selectedDevices.add(bluetoothDevices.get(i));
             tmp = tmp | b;
+        }
         if (!tmp)
             Toast.makeText(this, R.string.no_device_selected, Toast.LENGTH_SHORT).show();
         else {
             Intent intent = new Intent();
-            intent.putExtra(Const.SELECTED_DEVICES, status);
+            intent.putParcelableArrayListExtra(Const.SELECTED_DEVICES, selectedDevices);
             setResult(Activity.RESULT_OK, intent);
             finish();
         }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".uicontroller.activities.StandardPairedDeviceActivity">
+    <item
+        android:id="@+id/action_reset_setups"
+        android:orderInCategory="100"
+        android:title="@string/action_reset_setups"
+        android:icon="@drawable/ic_delete_forever_white_48dp"
+        app:showAsAction="never" />
+</menu>

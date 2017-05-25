@@ -19,19 +19,19 @@ import uk.ac.sussex.android.bluesensehub.controllers.services.BluetoothService;
 import uk.ac.sussex.android.bluesensehub.model.BlueSenseDevice;
 import uk.ac.sussex.android.bluesensehub.model.commands.CommandBTS;
 import uk.ac.sussex.android.bluesensehub.uicontroller.adapters.PagerAdapter;
-import uk.ac.sussex.android.bluesensehub.uicontroller.fragments.StreamingParametersFragment;
-import uk.ac.sussex.android.bluesensehub.uicontroller.fragments.StreamingStatusFragment;
+import uk.ac.sussex.android.bluesensehub.uicontroller.fragments.StreamParametersFragment;
+import uk.ac.sussex.android.bluesensehub.uicontroller.fragments.StreamStatusFragment;
 import uk.ac.sussex.android.bluesensehub.utilities.Const;
 import uk.ac.sussex.android.bluesensehub.utilities.Utils;
 
 /**
  * Created by ThiasTux.
  */
-public class StreamingSessionActivity extends AppCompatActivity implements BluetoothServiceDelegate {
+public class StreamSessionActivity extends AppCompatActivity implements BluetoothServiceDelegate {
 
     private List<BlueSenseDevice> devices;
-    private StreamingParametersFragment parametersFragment;
-    private StreamingStatusFragment statusFragment;
+    private StreamParametersFragment parametersFragment;
+    private StreamStatusFragment statusFragment;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -39,7 +39,7 @@ public class StreamingSessionActivity extends AppCompatActivity implements Bluet
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_streaming_session);
+        setContentView(R.layout.activity_stream_session);
 
         ButterKnife.bind(this);
 
@@ -74,18 +74,18 @@ public class StreamingSessionActivity extends AppCompatActivity implements Bluet
     }
 
     private void setupFragments() {
-        parametersFragment = (StreamingParametersFragment) getSupportFragmentManager().findFragmentById(R.id.session_parameters_fragment);
-        statusFragment = (StreamingStatusFragment) getSupportFragmentManager().findFragmentById(R.id.session_status_fragment);
+        parametersFragment = (StreamParametersFragment) getSupportFragmentManager().findFragmentById(R.id.session_parameters_fragment);
+        statusFragment = (StreamStatusFragment) getSupportFragmentManager().findFragmentById(R.id.session_status_fragment);
     }
 
     private void setupTabs() {
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        viewPager.setAdapter(new PagerAdapter(getSupportFragmentManager(), StreamingSessionActivity.this));
+        viewPager.setAdapter(new PagerAdapter(getSupportFragmentManager(), StreamSessionActivity.this));
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.fragment_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        parametersFragment = (StreamingParametersFragment) ((PagerAdapter) viewPager.getAdapter()).getItem(0);
-        statusFragment = (StreamingStatusFragment) ((PagerAdapter) viewPager.getAdapter()).getItem(1);
+        parametersFragment = (StreamParametersFragment) ((PagerAdapter) viewPager.getAdapter()).getItem(0);
+        statusFragment = (StreamStatusFragment) ((PagerAdapter) viewPager.getAdapter()).getItem(1);
     }
 }

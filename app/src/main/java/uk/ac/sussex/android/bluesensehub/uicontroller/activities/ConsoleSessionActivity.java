@@ -1,8 +1,10 @@
 package uk.ac.sussex.android.bluesensehub.uicontroller.activities;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -144,8 +146,7 @@ public class ConsoleSessionActivity extends AppCompatActivity implements Bluetoo
             case R.id.action_change_device:
                 chooseDevice();
             case R.id.action_refresh_connection:
-                disconnectDevice(device.getAddress());
-                connectDevice(device.getAddress());
+                reconnectDevice(device.getAddress());
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -173,22 +174,54 @@ public class ConsoleSessionActivity extends AppCompatActivity implements Bluetoo
         editor.apply();
     }
 
-
-    private void connectDevice(String address) {
-        startService(new Intent(this, BluetoothService.class)
-                .putExtra(Const.COMMAND_SERVICE_INTENT_KEY,
-                        new CommandBTC(address).getMessage()));
+    private void reconnectDevice(final String address) {
+        final Context context = this;
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                startService(new Intent(context, BluetoothService.class)
+                        .putExtra(Const.COMMAND_SERVICE_INTENT_KEY,
+                                new CommandBTD(address).getMessage()));
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                startService(new Intent(context, BluetoothService.class)
+                        .putExtra(Const.COMMAND_SERVICE_INTENT_KEY,
+                                new CommandBTC(address).getMessage()));
+            }
+        });
     }
 
-    private void disconnectDevice(String address) {
-        startService(new Intent(this, BluetoothService.class)
-                .putExtra(Const.COMMAND_SERVICE_INTENT_KEY,
-                        new CommandBTD(address).getMessage()));
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
+    private void connectDevice(final String address) {
+        final Context context = this;
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                startService(new Intent(context, BluetoothService.class)
+                        .putExtra(Const.COMMAND_SERVICE_INTENT_KEY,
+                                new CommandBTC(address).getMessage()));
+            }
+        });
+    }
+
+    private void disconnectDevice(final String address) {
+        final Context context = this;
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                startService(new Intent(context, BluetoothService.class)
+                        .putExtra(Const.COMMAND_SERVICE_INTENT_KEY,
+                                new CommandBTD(address).getMessage()));
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     public void chooseDevice() {
@@ -239,7 +272,7 @@ public class ConsoleSessionActivity extends AppCompatActivity implements Bluetoo
 
     }
 
-    @Subscribe(threadMode = ThreadMode.ASYNC)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeviceConnected(ClientConnSuccess clientConnSuccess) {
         device.setStatus(BluetoothState.STATE_CONNECTED);
         ActionBar actionBar = getSupportActionBar();
@@ -248,7 +281,7 @@ public class ConsoleSessionActivity extends AppCompatActivity implements Bluetoo
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.ASYNC)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeviceConnectionFailed(ClientConnFailed clientConnFailed) {
         ActionBar actionBar = getSupportActionBar();
         device = devicesList.get(clientConnFailed.getMAddress());
@@ -258,7 +291,7 @@ public class ConsoleSessionActivity extends AppCompatActivity implements Bluetoo
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.ASYNC)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeviceDisconnected(ClientDisconnSuccess clientDisconnSuccess) {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -266,7 +299,7 @@ public class ConsoleSessionActivity extends AppCompatActivity implements Bluetoo
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.ASYNC)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDeviceConnection(ClientConnOngoing clientConnOngoing) {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -274,7 +307,7 @@ public class ConsoleSessionActivity extends AppCompatActivity implements Bluetoo
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.ASYNC)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageReceived(ClientBytesReceived clientBytesReceived) {
         consoleTextView.append(clientBytesReceived.getMessage());
     }
