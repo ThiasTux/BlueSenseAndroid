@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import uk.ac.sussex.android.bluesensehub.R;
-import uk.ac.sussex.android.bluesensehub.controllers.buses.ClientBytesReceived;
 import uk.ac.sussex.android.bluesensehub.controllers.buses.ClientConnFailed;
 import uk.ac.sussex.android.bluesensehub.controllers.buses.ClientConnOngoing;
 import uk.ac.sussex.android.bluesensehub.controllers.buses.ClientConnSuccess;
@@ -116,12 +115,6 @@ public class LogSensorSetFragment extends Fragment {
     public void onDeviceConnecting(ClientConnOngoing clientConnOngoing) {
         adapter.setStatus(clientConnOngoing.getMAddress(), BluetoothState.STATE_CONNECTING);
         adapter.notifyItemChanged(clientConnOngoing.getMAddress());
-    }
-
-    @Subscribe(threadMode = ThreadMode.ASYNC)
-    public void onBytesReceived(ClientBytesReceived clientBytesReceived) {
-        /*adapter.appendTextToDevice(clientBytesReceived.getAddress(), clientBytesReceived.getMessage());
-        adapter.notifyItemChanged(clientBytesReceived.getMessage());*/
     }
 
 }

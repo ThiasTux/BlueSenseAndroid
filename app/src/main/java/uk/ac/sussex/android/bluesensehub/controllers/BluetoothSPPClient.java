@@ -85,6 +85,7 @@ public class BluetoothSPPClient {
     // device : The BluetoothDevice to connect
     // secure : Socket Security type - Secure (true) , Insecure (false)
     public synchronized void connect() {
+
         // Cancel any thread attempting to make a connection
         if (mState == BluetoothState.STATE_CONNECTING) {
             if (mConnectThread != null) {
@@ -241,6 +242,7 @@ public class BluetoothSPPClient {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
         }
     }
 

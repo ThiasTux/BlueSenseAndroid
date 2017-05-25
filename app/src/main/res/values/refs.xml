@@ -2,6 +2,6 @@
 <resources>
     <item name="devices_layout" type="layout">@layout/devices_layout_list</item>
     <item id="isTablet" name="isTablet" type="bool">false</item>
-    <item name="streaming_session_layout" type="layout">@layout/streaming_session_tab_layout</item>
-    <item name="logging_session_layout" type="layout">@layout/logging_session_tab_layout</item>
+    <item name="streaming_session_layout" type="layout">@layout/stream_session_tab_layout</item>
+    <item name="logging_session_layout" type="layout">@layout/log_session_tab_layout</item>
 </resources>

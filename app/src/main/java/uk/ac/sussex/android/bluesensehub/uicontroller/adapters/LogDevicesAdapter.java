@@ -36,7 +36,7 @@ public class LogDevicesAdapter extends RecyclerView.Adapter<LogDevicesAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.loggin_device_item, parent, false);
+                .inflate(R.layout.log_device_item, parent, false);
         return new ViewHolder(view);
     }
 
