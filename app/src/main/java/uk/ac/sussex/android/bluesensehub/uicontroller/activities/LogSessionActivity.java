@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
@@ -54,9 +55,6 @@ public class LogSessionActivity extends AppCompatActivity implements BluetoothSe
     ArrayList<LogSensorSet> sensorSets = new ArrayList<>();
 
     ArrayList<BlueSenseDevice> devices = new ArrayList<>();
-
-    private boolean isServiceStarted = false;
-    private boolean isPolicyOngoing = false;
 
     LogSetup setup;
 
@@ -99,7 +97,7 @@ public class LogSessionActivity extends AppCompatActivity implements BluetoothSe
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_activity_logging_session, menu);
+        getMenuInflater().inflate(R.menu.menu_activity_log_session, menu);
         return true;
     }
 
@@ -111,19 +109,22 @@ public class LogSessionActivity extends AppCompatActivity implements BluetoothSe
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.action_connect:
-                connectDevices();
-                break;
-            case R.id.action_disconnect:
+            case R.id.action_sync_rtc:
+                String commandValue = "Z";
+                Calendar cal = Calendar.getInstance();
+                commandValue += ("," + cal.get(Calendar.HOUR));
+                commandValue += (cal.get(Calendar.MINUTE));
+                commandValue += (cal.get(Calendar.SECOND));
+                sendCommand(new SensorCommand("Sync", commandValue));
+            case R.id.action_refresh_connection:
                 disconnectDevices();
-                break;
+                connectDevices();
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onServiceStarted(List<BlueSenseDevice> devices) {
-        isServiceStarted = true;
         connectDevices();
     }
 
@@ -160,26 +161,22 @@ public class LogSessionActivity extends AppCompatActivity implements BluetoothSe
     public void connectDevices() {
         final ArrayList<BlueSenseDevice> devices = this.devices;
         if (devices != null) {
-            if (devices.size() <= Const.MAX_DEVICES) {
-                final Context context = this;
-                AsyncTask.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (BlueSenseDevice device : devices) {
-                            startService(new Intent(context, BluetoothService.class)
-                                    .putExtra(Const.COMMAND_SERVICE_INTENT_KEY,
-                                            new CommandBTC(device.getAddress()).getMessage()));
-                            try {
-                                Thread.sleep(1000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+            final Context context = this;
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    for (BlueSenseDevice device : devices) {
+                        startService(new Intent(context, BluetoothService.class)
+                                .putExtra(Const.COMMAND_SERVICE_INTENT_KEY,
+                                        new CommandBTC(device.getAddress()).getMessage()));
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
                     }
-                });
-            } else {
-                isPolicyOngoing = true;
-            }
+                }
+            });
         }
     }
 
@@ -208,26 +205,22 @@ public class LogSessionActivity extends AppCompatActivity implements BluetoothSe
     @Override
     public void sendCommand(final SensorCommand command) {
         if (devices != null) {
-            if (!isPolicyOngoing) {
-                final Context context = this;
-                AsyncTask.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (BlueSenseDevice device : devices) {
-                            startService(new Intent(context, BluetoothService.class)
-                                    .putExtra(Const.COMMAND_SERVICE_INTENT_KEY,
-                                            new CommandBSM(device.getAddress(), command.getValue() + "\n").getMessage()));
-                            try {
-                                Thread.sleep(500);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+            final Context context = this;
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    for (BlueSenseDevice device : devices) {
+                        startService(new Intent(context, BluetoothService.class)
+                                .putExtra(Const.COMMAND_SERVICE_INTENT_KEY,
+                                        new CommandBSM(device.getAddress(), command.getValue() + "\n").getMessage()));
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
                     }
-                });
-            } else {
-
-            }
+                }
+            });
         }
     }
 

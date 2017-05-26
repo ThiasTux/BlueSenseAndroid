@@ -218,6 +218,7 @@ public class BluetoothSPPClient {
                 mmSocket.connect();
             } catch (IOException e) {
                 // Close the socket
+
                 try {
                     mmSocket.close();
                 } catch (IOException e2) {

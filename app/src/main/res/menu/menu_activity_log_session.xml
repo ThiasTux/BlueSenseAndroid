@@ -3,20 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_connect"
+        android:id="@+id/action_sync_rtc"
         android:icon="@drawable/ic_autorenew_white_48dp"
-        android:title="@string/action_connect"
+        android:title="@string/action_sync_rtc"
         app:showAsAction="ifRoom|withText"
         android:visible="true"
         android:orderInCategory="100" />
 
     <item
-        android:id="@+id/action_disconnect"
+        android:id="@+id/action_refresh_connection"
         android:icon="@drawable/ic_autorenew_white_48dp"
-        android:title="@string/action_disconnect"
+        android:title="@string/action_refresh_connection"
         app:showAsAction="ifRoom|withText"
-        android:visible="false"
-        android:orderInCategory="100" />
+        android:visible="true"
+        android:orderInCategory="105" />
 
     <item
         android:id="@+id/action_settings"

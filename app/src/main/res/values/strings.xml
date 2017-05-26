@@ -56,4 +56,5 @@
     <string name="select_setup_label">Select setup</string>
     <string name="action_connect">Connect</string>
     <string name="action_disconnect">Disconnect</string>
+    <string name="action_sync_rtc">Sync RTC</string>
 </resources>
